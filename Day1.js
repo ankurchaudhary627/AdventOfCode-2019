@@ -29,6 +29,9 @@ var singleFuel=0;
 for(var idx in fuelData){
     singleFuel+=calcFuel(fuelData[idx]);
 }
+
+// First part of puzzle
 console.log(singleFuel);
 
+// Second part of puzzle
 console.log(calcRecursiveFuel());
