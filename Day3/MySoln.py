@@ -39,7 +39,7 @@ def solve(d,posX,posY):
 s1=solve(data[0],0,0)
 s2=solve(data[1],0,0)
 
-commonPoints=s1 & s2
+commonPoints=s1 & s2   # shorthand for intersection
 
 ans=1e9+7
 for x,y in commonPoints:
