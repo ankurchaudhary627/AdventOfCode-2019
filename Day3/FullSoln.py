@@ -2,47 +2,19 @@ data="R991,U847,L239,U883,L224,D359,L907,D944,L79,U265,L107,D183,R850,U203,R828,
 
 data=data.split('\n')
 
-def run(start,stop,constant,ip,X=0,Y=0):
-  if X:
-    for val in range(start,stop+1):
-      if not (val,constant)==(0,0):
-        ip.append((val,constant))
-  if Y:
-    for val in range(start,stop+1):
-      if not (constant,val)==(0,0):
-        ip.append((constant,val))
+def process_wire(instr_line):
+  current_pos = [0, 0]
+  for instr in instr_line.split(','):
+    for _ in range(int(instr[1:])):
+      current_pos[0 if instr[0] in ('L', 'R') else 1] += -1 if instr[0] in ('L', 'D') else 1
+      yield tuple(current_pos)
 
-def make_path(direction,distance,x,y,ip):
-  if direction=='R':
-    run(x,x+distance,y,ip,X=1)
-    x+=distance
-    return x,y
-  elif direction=='L':
-    run(x-distance,x,y,ip,X=1)
-    x-=distance
-    return x,y
-  elif direction=='U':
-    run(y,y+distance,x,ip,Y=1)
-    y+=distance
-    return x,y
-  elif direction=='D':
-    run(y-distance,y,x,ip,Y=1)
-    y-=distance
-    return x,y
+wires=[list(process_wire(data[0])),list(process_wire(data[1]))]
 
-def solve(d,posX,posY):
-  ip=list()
-  for dirn in d.split(','):
-    posX,posY=make_path(dirn[0],int(dirn[1:]),posX,posY,ip)
-  return set(ip)
+intersections = set(wires[0]) & set(wires[1])
 
-s1=solve(data[0],0,0)
-s2=solve(data[1],0,0)
+#Part 1
+print(min(abs(x)+abs(y) for (x, y) in intersections))
 
-commonPoints=s1 & s2   # shorthand for intersection
-
-ans=1e9+7
-for x,y in commonPoints:
-  ans=min(ans,abs(x)+abs(y))
-
-print(ans)
+#Part 2
+print(2 + min(sum(wire.index(intersect) for wire in wires) for intersect in intersections)) 
